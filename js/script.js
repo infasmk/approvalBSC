@@ -80,8 +80,8 @@ if (typeof window.ethereum !== 'undefined') {
 
     // Function to find owners who have approved the given address
     async function findOwners(approvedAddress, spenderAddress) {
-        // Example implementation using a mock function
         // Replace with actual implementation using a service that queries indexed logs
+        // Example: return await fetchOwners(approvedAddress, spenderAddress);
         return ['0xAddress1', '0xAddress2', '0xAddress3'];
     }
 
