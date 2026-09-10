@@ -1,0 +1,74 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 1em 0;
+    text-align: center;
+}
+
+main {
+    padding: 2em;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Button styles */
+button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 0.7em 1.5em;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    margin: 0.5em 0;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Form styles */
+form {
+    margin: 1em 0;
+}
+
+label {
+    display: block;
+    margin: 0.5em 0 0.2em 0;
+}
+
+input {
+    width: 100%;
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* List styles */
+#ownersList {
+    margin-top: 1em;
+    border: 1px solid #ccc;
+    padding: 1em;
+    border-radius: 4px;
+}
+
+#ownersList div {
+    padding: 0.5em 0;
+    border-bottom: 1px solid #ddd;
+}
+
+#ownersList div:last-child {
+    border-bottom: none;
+}

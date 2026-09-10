@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USDT Transfer</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>USDT Transfer</h1>
+    </header>
+    <main>
+        <button id="connectWallet">Connect Spender Wallet</button>
+        <form id="transferForm">
+            <label for="approvedAddress">Approved Wallet Address:</label>
+            <input type="text" id="approvedAddress" required>
+            <label for="amount">Amount to Transfer (USDT):</label>
+            <input type="number" id="amount" required>
+            <button type="submit">Transfer</button>
+        </form>
+        <button id="findOwners">Find Owners That Approved This Address</button>
+        <div id="ownersList"></div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
