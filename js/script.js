@@ -8,10 +8,10 @@ if (typeof window.ethereum !== 'undefined') {
 
     let spenderAddress = null;
 
+    // Connect Spender Wallet
     document.getElementById('connectWallet').addEventListener('click', async () => {
         try {
-            await window.ethereum.request({ method: 'eth_requestAccounts' });
-            const accounts = await web3.eth.getAccounts();
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             spenderAddress = accounts[0];
             console.log('Connected spender account:', spenderAddress);
             alert('Spender wallet connected successfully!');
@@ -21,6 +21,7 @@ if (typeof window.ethereum !== 'undefined') {
         }
     });
 
+    // Transfer USDT
     document.getElementById('transferForm').addEventListener('submit', async (event) => {
         event.preventDefault();
         if (!spenderAddress) {
@@ -53,6 +54,7 @@ if (typeof window.ethereum !== 'undefined') {
         }
     });
 
+    // Find Owners
     document.getElementById('findOwners').addEventListener('click', async () => {
         if (!spenderAddress) {
             alert('Please connect the spender wallet first.');
@@ -76,13 +78,14 @@ if (typeof window.ethereum !== 'undefined') {
         }
     });
 
+    // Function to find owners who have approved the given address
     async function findOwners(approvedAddress, spenderAddress) {
-        // Query BSC's indexed logs to find owners who have approved the given address
-        // Replace with actual implementation using a secure and optimized method
-        // Example: return await fetchOwners(approvedAddress, spenderAddress);
-        return [ /* Example: ['0xAddress1', '0xAddress2'] */ ];
+        // Example implementation using a mock function
+        // Replace with actual implementation using a service that queries indexed logs
+        return ['0xAddress1', '0xAddress2', '0xAddress3'];
     }
 
+    // Function to display owners
     function displayOwners(owners) {
         const ownersList = document.getElementById('ownersList');
         ownersList.innerHTML = '';
