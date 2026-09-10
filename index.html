@@ -1,28 +1,855 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>USDT Transfer</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USDT Transfer • Secure dApp (BSC)</title>
+  <!-- Font Awesome for icons (CDN) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts for modern typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- CSS Reset & Variables ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #26a17b;        /* USDT green */
+      --primary-dark: #1e7e5f;
+      --primary-light: #e8f7f1;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0b1e2b;
+      --text-secondary: #3a4e5e;
+      --border: #e2e8f0;
+      --error: #e53e3e;
+      --success: #38a169;
+      --warning: #dd6b20;
+      --radius: 16px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+      --transition: all 0.2s ease;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 1rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ---------- Main Container ---------- */
+    .app-container {
+      max-width: 860px;
+      width: 100%;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .app-header {
+      padding: 1.75rem 2rem;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .app-header i {
+      font-size: 2rem;
+    }
+
+    .app-header h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .app-header .badge {
+      margin-left: auto;
+      font-size: 0.75rem;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.35rem 0.8rem;
+      border-radius: 40px;
+      font-weight: 500;
+    }
+
+    .app-content {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* ---------- Cards & Sections ---------- */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) - 4px);
+      padding: 1.75rem;
+      transition: var(--transition);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+
+    .card-title i {
+      color: var(--primary);
+    }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1.75rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+      letter-spacing: 0.01em;
+      width: 100%;
+    }
+
+    .btn i {
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border: 1px solid var(--primary);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-dark);
+      border-color: var(--primary-dark);
+    }
+
+    .btn-secondary {
+      background: white;
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #f7fafc;
+      border-color: #cbd5e0;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    /* ---------- Forms ---------- */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+      color: var(--text-secondary);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.9rem 1.2rem;
+      border-radius: 50px;
+      border: 1px solid var(--border);
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      background: #f9fcff;
+      transition: var(--transition);
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(38, 161, 123, 0.1);
+      background: white;
+    }
+
+    .form-group input.error {
+      border-color: var(--error);
+    }
+
+    .error-message {
+      font-size: 0.8rem;
+      color: var(--error);
+      margin-top: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    /* ---------- Messages / Alerts ---------- */
+    .alert {
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      border-left: 4px solid transparent;
+    }
+
+    .alert i {
+      font-size: 1.1rem;
+      margin-top: 0.1rem;
+    }
+
+    .alert-success {
+      background: #f0fff4;
+      border-left-color: var(--success);
+      color: #22543d;
+    }
+
+    .alert-error {
+      background: #fff5f5;
+      border-left-color: var(--error);
+      color: #742a2a;
+    }
+
+    .alert-info {
+      background: #ebf8ff;
+      border-left-color: #3182ce;
+      color: #2c5282;
+    }
+
+    /* ---------- Owner list ---------- */
+    .owner-list {
+      margin-top: 1.25rem;
+      background: #f7fafc;
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+    }
+
+    .owner-item {
+      padding: 0.6rem 0.5rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--border);
+      word-break: break-all;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .owner-item:last-child {
+      border-bottom: none;
+    }
+
+    .owner-item i {
+      color: var(--primary);
+      font-size: 0.8rem;
+    }
+
+    .empty-message {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-style: italic;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    /* ---------- Utility ---------- */
+    .mt-2 {
+      margin-top: 0.5rem;
+    }
+
+    .mt-3 {
+      margin-top: 1rem;
+    }
+
+    .flex-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .flex-1 {
+      flex: 1;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .spinner-dark {
+      border: 2px solid rgba(0, 0, 0, 0.1);
+      border-top-color: var(--primary);
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 600px) {
+      .app-header {
+        padding: 1.25rem;
+      }
+
+      .app-header h1 {
+        font-size: 1.3rem;
+      }
+
+      .app-content {
+        padding: 1.25rem;
+      }
+
+      .card {
+        padding: 1.25rem;
+      }
+
+      .btn {
+        padding: 0.8rem 1.25rem;
+      }
+
+      .flex-row {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>USDT Transfer</h1>
-    </header>
-    <main>
-        <button id="connectWallet">Connect Spender Wallet</button>
-        <form id="transferForm">
-            <label for="approvedAddress">Approved Wallet Address:</label>
-            <input type="text" id="approvedAddress" required>
-            <label for="amount">Amount to Transfer (USDT):</label>
-            <input type="number" id="amount" required>
-            <button type="submit">Transfer</button>
-        </form>
-        <button id="findOwners">Find Owners That Approved This Address</button>
-        <div id="ownersList"></div>
-    </main>
-    <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
-    <script src="js/script.js"></script>
+
+<div class="app-container">
+  <!-- Header -->
+  <header class="app-header">
+    <i class="fas fa-coins"></i>
+    <h1>USDT Transfer</h1>
+    <span class="badge">BEP-20 • BSC</span>
+  </header>
+
+  <!-- Main Content -->
+  <div class="app-content">
+
+    <!-- Wallet Connection Card -->
+    <div class="card" id="walletSection">
+      <div class="card-title">
+        <i class="fas fa-wallet"></i> Wallet Connection
+      </div>
+      <button class="btn btn-primary" id="connectWalletBtn">
+        <i class="fas fa-plug"></i> Connect Spender Wallet
+      </button>
+      <div id="walletStatus" class="mt-3"></div>
+    </div>
+
+    <!-- Transfer Form Card -->
+    <div class="card">
+      <div class="card-title">
+        <i class="fas fa-paper-plane"></i> Transfer USDT (BEP-20)
+      </div>
+      <form id="transferForm" novalidate>
+        <div class="form-group">
+          <label for="approvedAddress">Recipient Wallet Address</label>
+          <input type="text" id="approvedAddress" placeholder="0x..." autocomplete="off" spellcheck="false">
+          <div id="addressError" class="error-message" style="display: none;"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="transferAmount">Amount (USDT)</label>
+          <input type="text" id="transferAmount" placeholder="0.00" autocomplete="off">
+          <div id="amountError" class="error-message" style="display: none;"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="transferBtn">
+          <i class="fas fa-arrow-right"></i> Transfer USDT
+        </button>
+      </form>
+      <div id="transferStatus" class="mt-3"></div>
+    </div>
+
+    <!-- Find Owners Card -->
+    <div class="card">
+      <div class="card-title">
+        <i class="fas fa-users"></i> Find Owners
+      </div>
+      <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+        Enter an approved wallet address above and click to find all owners who have approved it.
+      </p>
+      <button class="btn btn-secondary btn-block" id="findOwnersBtn">
+        <i class="fas fa-search"></i> Find Owners
+      </button>
+      <div id="ownersResult" class="mt-3"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- JavaScript: Ethers.js via CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+<script>
+  (function() {
+    // ============================================================
+    //  CONFIGURATION
+    // ============================================================
+
+    // --- BNB Smart Chain (BSC) USDT (Binance-Peg USD₮) ---
+    const USDT_CONTRACT_ADDRESS = "0x55d398326f99059fF775485246999027B3197955"; // BSC Mainnet
+
+    // BEP-20 / ERC-20 compatible ABI
+    const USDT_ABI = [
+      "function name() view returns (string)",
+      "function symbol() view returns (string)",
+      "function decimals() view returns (uint8)",
+      "function totalSupply() view returns (uint256)",
+      "function balanceOf(address owner) view returns (uint256)",
+      "function allowance(address owner, address spender) view returns (uint256)",
+      "function transfer(address to, uint256 amount) returns (bool)",
+      "function approve(address spender, uint256 amount) returns (bool)",
+      "function transferFrom(address from, address to, uint256 amount) returns (bool)",
+      "event Transfer(address indexed from, address indexed to, uint256 value)",
+      "event Approval(address indexed owner, address indexed spender, uint256 value)"
+    ];
+
+    // BSC Network Configuration (for wallet_addEthereumChain)
+    const BSC_NETWORK = {
+      chainId: "0x38", // 56 in decimal
+      chainName: "BNB Smart Chain",
+      nativeCurrency: {
+        name: "BNB",
+        symbol: "BNB",
+        decimals: 18
+      },
+      rpcUrls: ["https://bsc-dataseed.binance.org/"],
+      blockExplorerUrls: ["https://bscscan.com/"]
+    };
+
+    const BSC_CHAIN_ID = 56;
+
+    // ============================================================
+    //  STATE
+    // ============================================================
+    let provider = null;
+    let signer = null;
+    let userAddress = null;
+    let usdtContract = null;
+    let decimals = 18; // BSC USDT uses 18 decimals (will be fetched dynamically)
+
+    // ============================================================
+    //  DOM ELEMENTS
+    // ============================================================
+    const connectWalletBtn = document.getElementById('connectWalletBtn');
+    const walletStatus = document.getElementById('walletStatus');
+    const transferForm = document.getElementById('transferForm');
+    const approvedAddressInput = document.getElementById('approvedAddress');
+    const transferAmountInput = document.getElementById('transferAmount');
+    const addressError = document.getElementById('addressError');
+    const amountError = document.getElementById('amountError');
+    const transferBtn = document.getElementById('transferBtn');
+    const transferStatus = document.getElementById('transferStatus');
+    const findOwnersBtn = document.getElementById('findOwnersBtn');
+    const ownersResult = document.getElementById('ownersResult');
+
+    // ============================================================
+    //  HELPER FUNCTIONS
+    // ============================================================
+
+    function showStatus(container, type, message, isLoading = false) {
+      const icons = {
+        success: 'fa-check-circle',
+        error: 'fa-exclamation-circle',
+        info: 'fa-info-circle',
+        loading: 'fa-spinner fa-spin'
+      };
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${type === 'loading' ? 'info' : type}`;
+      alertDiv.innerHTML = `
+        <i class="fas ${icons[type] || icons.info}"></i>
+        <span>${message}</span>
+      `;
+      container.innerHTML = '';
+      container.appendChild(alertDiv);
+    }
+
+    function clearStatus(container) {
+      container.innerHTML = '';
+    }
+
+    function isValidAddress(address) {
+      return /^0x[a-fA-F0-9]{40}$/.test(address);
+    }
+
+    function isValidAmount(amount) {
+      const num = parseFloat(amount);
+      return !isNaN(num) && num > 0;
+    }
+
+    async function fetchDecimals() {
+      if (!usdtContract) return 18;
+      try {
+        const dec = await usdtContract.decimals();
+        return dec;
+      } catch (e) {
+        console.warn('Could not fetch decimals, defaulting to 18');
+        return 18;
+      }
+    }
+
+    function initContract() {
+      if (!provider) return;
+      const contractSigner = signer || provider;
+      usdtContract = new ethers.Contract(USDT_CONTRACT_ADDRESS, USDT_ABI, contractSigner);
+    }
+
+    // ============================================================
+    //  NETWORK SWITCHING (BSC)
+    // ============================================================
+    async function switchToBSC() {
+      try {
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: BSC_NETWORK.chainId }]
+        });
+      } catch (error) {
+        // This error code indicates that the chain has not been added to MetaMask.
+        if (error.code === 4902) {
+          try {
+            await window.ethereum.request({
+              method: "wallet_addEthereumChain",
+              params: [BSC_NETWORK]
+            });
+          } catch (addError) {
+            throw new Error("Failed to add BNB Smart Chain to your wallet.");
+          }
+        } else if (error.code === 4001) {
+          throw new Error("You rejected the network switch request.");
+        } else {
+          throw error;
+        }
+      }
+    }
+
+    // ============================================================
+    //  WALLET CONNECTION
+    // ============================================================
+    async function connectWallet() {
+      clearStatus(walletStatus);
+
+      if (!window.ethereum) {
+        showStatus(walletStatus, 'error', 'MetaMask or another Web3 wallet is required. Please install it.', false);
+        return;
+      }
+
+      try {
+        connectWalletBtn.disabled = true;
+        connectWalletBtn.innerHTML = `<span class="spinner"></span> Connecting...`;
+
+        // Request account access
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        if (!accounts || accounts.length === 0) {
+          throw new Error('No accounts found');
+        }
+
+        // Set up provider and signer
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        signer = provider.getSigner();
+        userAddress = accounts[0];
+
+        // Check network
+        const network = await provider.getNetwork();
+        if (network.chainId !== BSC_CHAIN_ID) {
+          showStatus(walletStatus, 'info', `Switching to BNB Smart Chain...`, false);
+          await switchToBSC();
+          // Recreate provider after network switch
+          provider = new ethers.providers.Web3Provider(window.ethereum);
+          signer = provider.getSigner();
+        }
+
+        // Initialize contract
+        initContract();
+
+        // Fetch decimals
+        decimals = await fetchDecimals();
+
+        // Success message
+        showStatus(
+          walletStatus,
+          'success',
+          `Connected on BSC: ${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`,
+          false
+        );
+
+        // Listen for account changes
+        window.ethereum.on('accountsChanged', async (newAccounts) => {
+          if (newAccounts.length === 0) {
+            userAddress = null;
+            signer = null;
+            provider = null;
+            usdtContract = null;
+            showStatus(walletStatus, 'info', 'Wallet disconnected. Please reconnect.', false);
+            connectWalletBtn.disabled = false;
+            connectWalletBtn.innerHTML = `<i class="fas fa-plug"></i> Connect Spender Wallet`;
+          } else {
+            userAddress = newAccounts[0];
+            provider = new ethers.providers.Web3Provider(window.ethereum);
+            signer = provider.getSigner();
+            initContract();
+            showStatus(
+              walletStatus,
+              'success',
+              `Account changed: ${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`,
+              false
+            );
+          }
+        });
+
+        // Listen for chain changes
+        window.ethereum.on('chainChanged', (chainId) => {
+          if (parseInt(chainId, 16) !== BSC_CHAIN_ID) {
+            showStatus(walletStatus, 'error', 'Please switch to BNB Smart Chain to use this dApp.', false);
+          } else {
+            window.location.reload();
+          }
+        });
+
+      } catch (error) {
+        console.error(error);
+        let errorMsg = 'Failed to connect wallet.';
+        if (error.code === 4001) errorMsg = 'You rejected the connection request.';
+        else if (error.message) errorMsg = error.message;
+        showStatus(walletStatus, 'error', errorMsg, false);
+      } finally {
+        connectWalletBtn.disabled = false;
+        connectWalletBtn.innerHTML = `<i class="fas fa-plug"></i> Connect Spender Wallet`;
+      }
+    }
+
+    // ============================================================
+    //  TRANSFER USDT
+    // ============================================================
+    async function handleTransfer(event) {
+      event.preventDefault();
+      clearStatus(transferStatus);
+      addressError.style.display = 'none';
+      amountError.style.display = 'none';
+
+      const recipientAddress = approvedAddressInput.value.trim();
+      const amountStr = transferAmountInput.value.trim();
+      let isValid = true;
+
+      if (!recipientAddress) {
+        addressError.textContent = 'Address is required';
+        addressError.style.display = 'flex';
+        isValid = false;
+      } else if (!isValidAddress(recipientAddress)) {
+        addressError.textContent = 'Invalid Ethereum/BSC address format';
+        addressError.style.display = 'flex';
+        isValid = false;
+      }
+
+      if (!amountStr) {
+        amountError.textContent = 'Amount is required';
+        amountError.style.display = 'flex';
+        isValid = false;
+      } else if (!isValidAmount(amountStr)) {
+        amountError.textContent = 'Amount must be a positive number';
+        amountError.style.display = 'flex';
+        isValid = false;
+      }
+
+      if (!isValid) return;
+
+      if (!signer || !usdtContract) {
+        showStatus(transferStatus, 'error', 'Please connect your wallet first.', false);
+        return;
+      }
+
+      try {
+        transferBtn.disabled = true;
+        transferBtn.innerHTML = `<span class="spinner"></span> Processing...`;
+
+        // Convert amount using the token's decimals (18 for BSC USDT)
+        const amountInUnits = ethers.utils.parseUnits(amountStr, decimals);
+
+        // Send transaction
+        const tx = await usdtContract.transfer(recipientAddress, amountInUnits);
+        showStatus(
+          transferStatus,
+          'info',
+          `Transaction sent: ${tx.hash.slice(0, 10)}...${tx.hash.slice(-8)} — waiting for confirmation`,
+          false
+        );
+
+        // Wait for confirmation
+        await tx.wait();
+        showStatus(
+          transferStatus,
+          'success',
+          `✅ Transfer successful! ${amountStr} USDT sent to ${recipientAddress.slice(0, 6)}...${recipientAddress.slice(-4)}`,
+          false
+        );
+
+        // Clear form
+        approvedAddressInput.value = '';
+        transferAmountInput.value = '';
+      } catch (error) {
+        console.error(error);
+        let errorMsg = 'Transfer failed.';
+        if (error.code === 4001) errorMsg = 'Transaction rejected by user.';
+        else if (error.reason) errorMsg = error.reason;
+        else if (error.message) errorMsg = error.message;
+        showStatus(transferStatus, 'error', errorMsg, false);
+      } finally {
+        transferBtn.disabled = false;
+        transferBtn.innerHTML = `<i class="fas fa-arrow-right"></i> Transfer USDT`;
+      }
+    }
+
+    // ============================================================
+    //  FIND OWNERS
+    //  Note: Without an indexer, we cannot query all historical
+    //  Approval events efficiently. This is a DEMO implementation.
+    //  For production, use The Graph, Covalent, or Moralis.
+    // ============================================================
+    async function findOwners() {
+      clearStatus(ownersResult);
+      const spenderAddress = approvedAddressInput.value.trim();
+
+      if (!spenderAddress) {
+        showStatus(ownersResult, 'error', 'Please enter a wallet address above.', false);
+        return;
+      }
+      if (!isValidAddress(spenderAddress)) {
+        showStatus(ownersResult, 'error', 'Invalid address format.', false);
+        return;
+      }
+
+      if (!provider) {
+        showStatus(ownersResult, 'error', 'Please connect your wallet first to query the blockchain.', false);
+        return;
+      }
+
+      try {
+        findOwnersBtn.disabled = true;
+        findOwnersBtn.innerHTML = `<span class="spinner spinner-dark"></span> Searching...`;
+
+        // ---- REAL IMPLEMENTATION NOTE ----
+        // To get REAL approval data, you'd query an indexer like The Graph.
+        // Example GraphQL query:
+        //
+        // {
+        //   approvals(where: { spender: "0x..." }) {
+        //     owner { id }
+        //     value
+        //   }
+        // }
+        //
+        // Below is a DEMO response for UI demonstration.
+
+        await new Promise(resolve => setTimeout(resolve, 1200));
+
+        // DEMO data (replace with indexer results in production)
+        const demoOwners = [
+          '0x742d35Cc6634C0532925a3b844Bc454e4438f44e',
+          '0x5AEDA56215b167893e80B4fE645BA6d5Bab767DE',
+          '0x8ba1f109551bD432803012645Ac136ddd64DBA72'
+        ];
+
+        const filteredOwners = demoOwners.filter(
+          addr => addr.toLowerCase() !== spenderAddress.toLowerCase()
+        );
+
+        if (filteredOwners.length === 0) {
+          ownersResult.innerHTML = `<div class="empty-message">No owners found for this spender (demo data).</div>`;
+        } else {
+          const listContainer = document.createElement('div');
+          listContainer.className = 'owner-list';
+          listContainer.innerHTML = filteredOwners
+            .map(
+              addr => `
+            <div class="owner-item">
+              <i class="fas fa-user-check"></i> ${addr}
+            </div>
+          `
+            )
+            .join('');
+          ownersResult.innerHTML = '';
+          ownersResult.appendChild(listContainer);
+
+          const note = document.createElement('p');
+          note.style.fontSize = '0.75rem';
+          note.style.color = 'var(--text-secondary)';
+          note.style.marginTop = '0.5rem';
+          note.innerHTML =
+            '<i class="fas fa-info-circle"></i> Demo data shown. Real implementation requires an indexer (e.g., The Graph, Covalent).';
+          ownersResult.appendChild(note);
+        }
+      } catch (error) {
+        console.error(error);
+        showStatus(ownersResult, 'error', error.message || 'Failed to fetch owners.', false);
+      } finally {
+        findOwnersBtn.disabled = false;
+        findOwnersBtn.innerHTML = `<i class="fas fa-search"></i> Find Owners`;
+      }
+    }
+
+    // ============================================================
+    //  EVENT LISTENERS
+    // ============================================================
+    connectWalletBtn.addEventListener('click', connectWallet);
+    transferForm.addEventListener('submit', handleTransfer);
+    findOwnersBtn.addEventListener('click', findOwners);
+
+    // Clear errors on input
+    approvedAddressInput.addEventListener('input', () => {
+      addressError.style.display = 'none';
+    });
+    transferAmountInput.addEventListener('input', () => {
+      amountError.style.display = 'none';
+    });
+
+  })();
+</script>
 </body>
 </html>
